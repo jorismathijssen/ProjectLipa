@@ -89,6 +89,5 @@ ENV/
 .ropeproject
 
 #SecretFiles
-*/James/deployment/discord-bot.ini
-*/James/bot/settings.py
-
+/James/bot/settings.py
+/James/deployment/discord-bot.ini
