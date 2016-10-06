@@ -90,3 +90,5 @@ ENV/
 
 #SecretFiles
 */deployment/discord-bot.ini
+*/bot/settings.py
+
