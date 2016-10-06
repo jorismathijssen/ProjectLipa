@@ -93,4 +93,3 @@ ENV/
 /James/deployment/discord-bot.ini
 /James/credentials.json
 .idea/workspace.xml
-James/
