@@ -14,7 +14,12 @@ Hello my name is James, how can I help you?
 """
 
 initial_extensions = [
-    'cogs.admin'
+    'cogs.admin',
+    'cogs.mod',
+    'cogs.api',
+    'cogs.Translate',
+    'cogs.meta'
+
 ]
 
 discord_logger = logging.getLogger('discord')
@@ -26,7 +31,7 @@ log.addHandler(handler)
 
 help_attrs = dict(hidden=True)
 
-prefix = ['!', '\N{HEAVY EXCLAMATION MARK SYMBOL}']
+prefix = ['!','.', '\N{HEAVY EXCLAMATION MARK SYMBOL}']
 bot = commands.Bot(command_prefix=prefix, description=description, pm_help=None, help_attrs=help_attrs)
 
 @bot.event
