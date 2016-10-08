@@ -1,11 +1,12 @@
-from discord.ext import commands
-from .utils import checks
-import discord
 import inspect
 
+from discord.ext import commands
+
+from .utils import checks
+
+
 # to expose to the eval command
-import datetime
-from collections import Counter
+
 
 class Admin:
     """Admin-only commands that make the bot dynamic."""
@@ -15,7 +16,7 @@ class Admin:
 
     @commands.command(hidden=True)
     @checks.is_owner()
-    async def load(self, *, module : str):
+    async def load(self, *, module: str):
         """Loads a module."""
         try:
             self.bot.load_extension(module)
@@ -27,7 +28,7 @@ class Admin:
 
     @commands.command(hidden=True)
     @checks.is_owner()
-    async def unload(self, *, module : str):
+    async def unload(self, *, module: str):
         """Unloads a module."""
         try:
             self.bot.unload_extension(module)
@@ -39,7 +40,7 @@ class Admin:
 
     @commands.command(name='reload', hidden=True)
     @checks.is_owner()
-    async def _reload(self, *, module : str):
+    async def _reload(self, *, module: str):
         """Reloads a module."""
         try:
             self.bot.unload_extension(module)
@@ -52,7 +53,7 @@ class Admin:
 
     @commands.command(pass_context=True, hidden=True)
     @checks.is_owner()
-    async def debug(self, ctx, *, code : str):
+    async def debug(self, ctx, *, code: str):
         """Evaluates code."""
         code = code.strip('` ')
         python = '```py\n{}\n```'
@@ -78,6 +79,7 @@ class Admin:
             return
 
         await self.bot.say(python.format(result))
+
 
 def setup(bot):
     bot.add_cog(Admin(bot))

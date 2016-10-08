@@ -1,11 +1,16 @@
-from discord.ext import commands
-from .utils import checks, formats
-import discord
-from collections import OrderedDict, deque, Counter
-import os, datetime
-import re, asyncio
+import asyncio
 import copy
+import datetime
+import os
+import re
 import unicodedata
+from collections import Counter
+
+import discord
+from discord.ext import commands
+
+from .utils import checks, formats
+
 
 class TimeParser:
     def __init__(self, argument):
@@ -32,8 +37,9 @@ class TimeParser:
         if self.seconds < 0:
             raise commands.BadArgument('I don\'t do negative time.')
 
-        if self.seconds > 604800: # 7 days
+        if self.seconds > 604800:  # 7 days
             raise commands.BadArgument('That\'s a bit too far in the future for me.')
+
 
 class Meta:
     """Commands for utilities related to Discord or the Bot itself."""
@@ -45,7 +51,8 @@ class Meta:
     async def hello(self, ctx):
         """Displays my intro message."""
         author = ctx.message.author
-        await self.bot.say('Hello ' + author.mention + ', my name is James, your personal butler bot in this discord server')
+        await self.bot.say(
+            'Hello ' + author.mention + ', my name is James, your personal butler bot in this discord server')
 
     @commands.command()
     async def charinfo(self, *, characters: str):
@@ -61,12 +68,13 @@ class Meta:
         def to_string(c):
             digit = format(ord(c), 'x')
             name = unicodedata.name(c, 'Name not found.')
-            return '`0x{0}`: {1} - {2} \N{EM DASH} <http://www.fileformat.info/info/unicode/char/{0}>'.format(digit, name, c)
+            return '`0x{0}`: {1} - {2} \N{EM DASH} <http://www.fileformat.info/info/unicode/char/{0}>'.format(digit,
+                                                                                                              name, c)
 
         await self.bot.say('\n'.join(map(to_string, characters)))
 
     @commands.command()
-    async def source(self, command : str = None):
+    async def source(self, command: str = None):
         """Displays my full source code or for a specific command.
 
         To display the source code of a subcommand you have to separate it by
@@ -105,7 +113,7 @@ class Meta:
         await self.bot.say(final_url)
 
     @commands.command(pass_context=True, aliases=['reminder'])
-    async def timer(self, ctx, time : TimeParser, *, message=''):
+    async def timer(self, ctx, time: TimeParser, *, message=''):
         """Reminds you of something after a certain amount of time.
 
         The time can optionally be specified with units such as 'h'
@@ -142,7 +150,7 @@ class Meta:
         await self.bot.logout()
 
     @commands.group(pass_context=True, no_pm=True, invoke_without_command=True)
-    async def info(self, ctx, *, member : discord.Member = None):
+    async def info(self, ctx, *, member: discord.Member = None):
         """Shows info about a member.
 
         This cannot be used in private messages. If you don't specify
@@ -224,7 +232,7 @@ class Meta:
         await formats.entry_to_code(self.bot, entries)
 
     @commands.command(pass_context=True, no_pm=True)
-    async def permissions(self, ctx, *, member : discord.Member = None):
+    async def permissions(self, ctx, *, member: discord.Member = None):
         """Shows a member's permissions.
 
         You cannot use this in private messages. If no member is given then
@@ -294,7 +302,6 @@ class Meta:
         except:
             await self.bot.say('Could not leave..')
 
-
     @commands.command()
     async def uptime(self):
         """Tells you how long the bot has been up for."""
@@ -314,7 +321,7 @@ class Meta:
 
         # statistics
         total_members = sum(len(s.members) for s in self.bot.servers)
-        total_online  = sum(1 for m in self.bot.get_all_members() if m.status != discord.Status.offline)
+        total_online = sum(1 for m in self.bot.get_all_members() if m.status != discord.Status.offline)
         unique_members = set(self.bot.get_all_members())
         unique_online = sum(1 for m in unique_members if m.status != discord.Status.offline)
         channel_types = Counter(c.type for c in self.bot.get_all_channels())
@@ -346,6 +353,7 @@ class Meta:
             await asyncio.sleep(1)
 
         await self.bot.say('go')
+
 
 def setup(bot):
     bot.add_cog(Meta(bot))

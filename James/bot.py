@@ -1,13 +1,15 @@
-from discord.ext import commands
-import discord
-from James.cogs.utils import checks
-import datetime, re
-import json, asyncio
 import copy
+import datetime
+import json
 import logging
-import traceback
 import sys
+import traceback
 from collections import Counter
+
+import discord
+from discord.ext import commands
+
+from James.cogs.utils import checks
 
 description = """
 Hello my name is James, how can I help you?
@@ -32,8 +34,9 @@ log.addHandler(handler)
 
 help_attrs = dict(hidden=True)
 
-prefix = ['!','.', '\N{HEAVY EXCLAMATION MARK SYMBOL}']
+prefix = ['!', '.', '\N{HEAVY EXCLAMATION MARK SYMBOL}']
 bot = commands.Bot(command_prefix=prefix, description=description, pm_help=None, help_attrs=help_attrs)
+
 
 @bot.event
 async def on_command_error(error, ctx):
@@ -46,6 +49,7 @@ async def on_command_error(error, ctx):
         traceback.print_tb(error.original.__traceback__)
         print('{0.__class__.__name__}: {0}'.format(error.original), file=sys.stderr)
 
+
 @bot.event
 async def on_ready():
     print('Logged in as:')
@@ -57,9 +61,11 @@ async def on_ready():
     game = discord.Game(name='Butler Simulator Deluxe', url='http://reupload.nl', type=1)
     await bot.change_presence(game=game, status=None, afk=False)
 
+
 @bot.event
 async def on_resumed():
     print('resumed...')
+
 
 @bot.event
 async def on_command(command, ctx):
@@ -73,6 +79,7 @@ async def on_command(command, ctx):
 
     log.info('{0.timestamp}: {0.author.name} in {1}: {0.content}'.format(message, destination))
 
+
 @bot.event
 async def on_message(message):
     if message.author.bot:
@@ -80,18 +87,21 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+
 @bot.command(pass_context=True, hidden=True)
 @checks.is_owner()
-async def do(ctx, times : int, *, command):
+async def do(ctx, times: int, *, command):
     """Repeats a command a specified number of times."""
     msg = copy.copy(ctx.message)
     msg.content = command
     for i in range(times):
         await bot.process_commands(msg)
 
+
 def load_credentials():
     with open('credentials.json') as f:
         return json.load(f)
+
 
 if __name__ == '__main__':
     credentials = load_credentials()

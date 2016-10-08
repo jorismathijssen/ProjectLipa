@@ -1,5 +1,6 @@
-import json
 import asyncio
+import json
+
 
 class Config:
     """The "database" object. Internally based on ``json``."""

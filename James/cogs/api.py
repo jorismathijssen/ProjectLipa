@@ -1,17 +1,21 @@
-from discord.ext import commands
-from .utils import checks, config
 import asyncio
-import discord
 import datetime
 import re
 from collections import Counter
+
+import discord
+from discord.ext import commands
+
+from .utils import checks, config
 
 DISCORD_API_ID = '81384788765712384'
 USER_BOTS_ROLE = '178558252869484544'
 CONTRIBUTORS_ROLE = '111173097888993280'
 
+
 def is_discord_api():
     return checks.is_in_servers(DISCORD_API_ID)
+
 
 def contributor_or_higher():
     def predicate(ctx):
@@ -24,7 +28,9 @@ def contributor_or_higher():
             return False
 
         return ctx.message.author.top_role.position >= role.position
+
     return commands.check(predicate)
+
 
 class API:
     """Discord API exclusive things."""
@@ -59,7 +65,7 @@ class API:
 
     @commands.group(pass_context=True, aliases=['rtfd'], invoke_without_command=True)
     @is_discord_api()
-    async def rtfm(self, ctx, *, obj : str = None):
+    async def rtfm(self, ctx, *, obj: str = None):
         """Gives you a documentation link for a discord.py entity.
 
         Events, objects, and functions are all supported through a
@@ -165,7 +171,6 @@ class API:
         total_uses = sum(counter.values())
         output.append('**Total uses**: ' + str(total_uses))
 
-
         # first we get the most used users
         top_ten = counter.most_common(10)
         if top_ten:
@@ -210,7 +215,7 @@ class API:
     @_feeds.command(name='create', pass_context=True)
     @commands.has_permissions(manage_roles=True)
     @is_discord_api()
-    async def feeds_create(self, ctx, *, name : str):
+    async def feeds_create(self, ctx, *, name: str):
         """Creates a feed with the specified name.
 
         You need Manage Roles permissions to create a feed.
@@ -233,7 +238,7 @@ class API:
     @_feeds.command(name='delete', aliases=['remove'], pass_context=True)
     @commands.has_permissions(manage_roles=True)
     @is_discord_api()
-    async def feeds_delete(self, ctx, *, feed : str):
+    async def feeds_delete(self, ctx, *, feed: str):
         """Removes a feed from the channel.
 
         This will also delete the associated role so this
@@ -279,7 +284,7 @@ class API:
 
     @commands.command(pass_context=True)
     @is_discord_api()
-    async def sub(self, ctx, *, feed : str):
+    async def sub(self, ctx, *, feed: str):
         """Subscribes to the publication of a feed.
 
         This will allow you to receive updates from the channel
@@ -289,7 +294,7 @@ class API:
 
     @commands.command(pass_context=True)
     @is_discord_api()
-    async def unsub(self, ctx, *, feed : str):
+    async def unsub(self, ctx, *, feed: str):
         """Unsubscribe to the publication of a feed.
 
         This will remove you from notifications of a feed you
@@ -301,7 +306,7 @@ class API:
     @commands.command(pass_context=True)
     @commands.has_permissions(manage_roles=True)
     @is_discord_api()
-    async def publish(self, ctx, feed : str, *, content : str):
+    async def publish(self, ctx, feed: str, *, content: str):
         """Publishes content to a feed.
 
         Everyone who is subscribed to the feed will be notified
@@ -358,6 +363,7 @@ class API:
 
         fmt = 'Found {} entries:\n{}'
         await self.bot.say(fmt.format(len(entries), '\n\n'.join(entries)))
+
 
 def setup(bot):
     bot.add_cog(API(bot))

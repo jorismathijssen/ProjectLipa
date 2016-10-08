@@ -1,17 +1,22 @@
-from discord.ext import commands
-from .utils import config, checks
-from collections import Counter
-import re
-import discord
+import argparse
 import asyncio
-import argparse, shlex
 import logging
+import re
+import shlex
+from collections import Counter
+
+import discord
+from discord.ext import commands
+
+from .utils import config, checks
 
 log = logging.getLogger(__name__)
+
 
 class Arguments(argparse.ArgumentParser):
     def error(self, message):
         raise RuntimeError(message)
+
 
 class Mod:
     """Moderation related commands."""
@@ -105,7 +110,7 @@ class Mod:
             await self.bot.say('I am not ignoring any channels here.')
 
     @ignore.command(name='channel', pass_context=True)
-    async def channel_cmd(self, ctx, *, channel : discord.Channel = None):
+    async def channel_cmd(self, ctx, *, channel: discord.Channel = None):
         """Ignores a specific channel from being processed.
 
         If no channel is specified, the current channel is ignored.
@@ -141,7 +146,7 @@ class Mod:
         ignored = self.config.get('ignored', [])
         channels = ctx.message.server.channels
         ignored.extend(c.id for c in channels if c.type == discord.ChannelType.text)
-        await self.config.put('ignored', list(set(ignored))) # make unique
+        await self.config.put('ignored', list(set(ignored)))  # make unique
         await self.bot.say('\U0001f44c')
 
     @commands.group(pass_context=True, no_pm=True, invoke_without_command=True)
@@ -183,7 +188,7 @@ class Mod:
 
     @commands.command(pass_context=True, no_pm=True)
     @checks.mod_or_permissions(manage_messages=True)
-    async def cleanup(self, ctx, search : int = 100):
+    async def cleanup(self, ctx, search: int = 100):
         """Cleans up the bot's messages from the channel.
 
         If a search number is specified, it searches that many messages to delete.
@@ -245,7 +250,7 @@ class Mod:
 
     @commands.command(no_pm=True)
     @checks.admin_or_permissions(kick_members=True)
-    async def kick(self, *, member : discord.Member):
+    async def kick(self, *, member: discord.Member):
         """Kicks a member from the server.
 
         In order for this to work, the bot must have Kick Member permissions.
@@ -265,7 +270,7 @@ class Mod:
 
     @commands.command(no_pm=True)
     @checks.admin_or_permissions(ban_members=True)
-    async def ban(self, *, member : discord.Member):
+    async def ban(self, *, member: discord.Member):
         """Bans a member from the server.
 
         In order for this to work, the bot must have Ban Member permissions.
@@ -285,7 +290,7 @@ class Mod:
 
     @commands.command(no_pm=True)
     @checks.admin_or_permissions(ban_members=True)
-    async def softban(self, *, member : discord.Member):
+    async def softban(self, *, member: discord.Member):
         """Soft bans a member from the server.
 
         A softban is basically banning the member from the server but
@@ -308,7 +313,7 @@ class Mod:
 
     @commands.command(no_pm=True)
     @checks.admin_or_permissions(manage_server=True)
-    async def plonk(self, *, member : discord.Member):
+    async def plonk(self, *, member: discord.Member):
         """Bans a user from using the bot.
 
         Note that this ban is **global**. So they are banned from
@@ -334,7 +339,7 @@ class Mod:
 
     @commands.command(no_pm=True)
     @checks.admin_or_permissions(manage_server=True)
-    async def unplonk(self, *, member : discord.Member):
+    async def unplonk(self, *, member: discord.Member):
         """Unbans a user from using the bot.
 
         To use this command you must have the Manage Server permission
@@ -353,7 +358,7 @@ class Mod:
 
     @commands.group(pass_context=True, no_pm=True, invoke_without_command=True)
     @checks.admin_or_permissions(ban_members=True)
-    async def mentionspam(self, ctx, count: int=None):
+    async def mentionspam(self, ctx, count: int = None):
         """Enables auto-banning accounts that spam mentions.
 
         If a message contains `count` or more mentions then the
@@ -417,7 +422,7 @@ class Mod:
 
         ignores = settings.get('ignore', [])
         ignores.extend(c.id for c in channels)
-        settings['ignore'] = list(set(ignores)) # make it unique
+        settings['ignore'] = list(set(ignores))  # make it unique
         await self.config.put('mentions', counts)
         await self.bot.say('Mentions are now ignored on %s' % ', '.join('<#%s>' % c.id for c in channels))
 
@@ -446,7 +451,7 @@ class Mod:
 
     @commands.command(pass_context=True, no_pm=True)
     @checks.admin_or_permissions(manage_roles=True)
-    async def colour(self, ctx, colour : discord.Colour, *, role : discord.Role):
+    async def colour(self, ctx, colour: discord.Colour, *, role: discord.Role):
         """Changes the colour of a role.
 
         The colour must be a hexadecimal value, e.g. FF2AEF. Don't prefix it
@@ -512,12 +517,12 @@ class Mod:
         await self.do_removal(ctx.message, search, lambda e: True)
 
     @remove.command(pass_context=True)
-    async def user(self, ctx, member : discord.Member, search=100):
+    async def user(self, ctx, member: discord.Member, search=100):
         """Removes all messages by the member."""
         await self.do_removal(ctx.message, search, lambda e: e.author == member)
 
     @remove.command(pass_context=True)
-    async def contains(self, ctx, *, substr : str):
+    async def contains(self, ctx, *, substr: str):
         """Removes all messages containing a substring.
 
         The substring must be at least 3 characters long.
@@ -537,6 +542,7 @@ class Mod:
 
         def predicate(m):
             return m.author == member or m.content.startswith(prefix)
+
         await self.do_removal(ctx.message, 100, predicate)
 
     @remove.command(pass_context=True)
@@ -620,14 +626,16 @@ class Mod:
             predicates.append(lambda m: any(m.content.endswith(s) for s in args.ends))
 
         op = all if not args._or else any
+
         def predicate(m):
             r = op(p(m) for p in predicates)
             if args._not:
                 return not r
             return r
 
-        args.search = max(0, min(2000, args.search)) # clamp from 0-2000
+        args.search = max(0, min(2000, args.search))  # clamp from 0-2000
         await self.do_removal(ctx.message, args.search, predicate)
+
 
 def setup(bot):
     bot.add_cog(Mod(bot))

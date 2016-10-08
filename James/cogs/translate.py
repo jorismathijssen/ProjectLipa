@@ -1,15 +1,19 @@
-import aiohttp
 import json
 import logging
 import random
+
+import aiohttp
 from discord.ext import commands
 
 mangle_lines = {}
+errorcode = 1
 
 log = logging.getLogger()
 
+
 class Translate:
     """Cog for translating strings"""
+
     def __init__(self, bot):
         self.bot = bot
         self.session = aiohttp.ClientSession()
@@ -40,9 +44,10 @@ class Translate:
             "sl": in_lang,
             "tl": out_lang,
             "dt": "t",
-            "q" : phrase,
+            "q": phrase,
         }
         async with self.session.post(url, data=query, headers=headers) as resp:
+            global errorcode
             if resp.status == 200:
                 result = await resp.text()
                 if result == '[,,""]':
@@ -58,20 +63,31 @@ class Translate:
                     language = data[2]  # -2][0][0]
                 except:
                     language = '?'
-
+                errorcode = 2
                 return ''.join(x[0] for x in data[0])
 
             elif resp.status == 404:
-                return await 'A 404 returned, is translation API up?'
+                errorcode = 1
                 log.info('Translate Google returned status: {0}'.format(resp.status))
+                return 'A 404 returned!'
+
+            elif resp.status == 503:
+                errorcode = 1
+                log.info('Google returned status: {0}'.format(resp.status))
+                return "A 503 returned! I spammed the google service and i cant solve the captcha ({0}). I'm sorry for the trouble!".format(
+                    resp.url)
+
             else:
-                return await 'Something happend, is the API still working?'
+                errorcode = 1
                 log.info('Translate Google returned status: {0} Response: {1} and Headers: {2}'.format(resp.status,
                                                                                                        resp.reason,
                                                                                                        resp.headers))
+                return 'Is the API still working? Status: {0} Response: {1} and Headers: {2}'.format(resp.status,
+                                                                                                     resp.reason,
+                                                                                                     resp.headers)
 
     @commands.command(pass_context=True, aliases=['tr'])
-    async def translate(self,ctx, *, phrase=''):
+    async def translate(self, ctx, *, phrase=''):
         """
         Translate string after the command to English.
 
@@ -79,7 +95,10 @@ class Translate:
         """
         translation = await self.translateMethod(phrase)
         author = ctx.message.author
-        await self.bot.say(author.mention + ", I have translated the text into the following: " + translation);
+        if (errorcode == 2):
+            await self.bot.say(author.mention + ", I have translated the text into the following: " + translation);
+        if (errorcode == 1):
+            await self.bot.say(author.mention + ", something went wrong. This is the message: " + translation);
 
     @commands.command(pass_context=True, aliases=['mngl'])
     async def mangle(self, ctx, *, phrase=''):
@@ -121,7 +140,11 @@ class Translate:
             if not phrase:
                 phrase = backup
                 break
-        await self.bot.say(author.mention + " mangle: " + phrase);
+        if (errorcode == 1):
+            await self.bot.say(author.mention + ", something went wrong. This is the message: " + phrase);
+        if (errorcode == 2):
+            await self.bot.say(author.mention + " mangle: " + phrase);
+
 
 def setup(bot):
     bot.add_cog(Translate(bot))
