@@ -17,8 +17,9 @@ initial_extensions = [
     'cogs.admin',
     'cogs.mod',
     'cogs.api',
-    'cogs.Translate',
-    'cogs.meta'
+    'cogs.translate',
+    'cogs.meta',
+    'cogs.weather'
 
 ]
 
@@ -53,6 +54,8 @@ async def on_ready():
     print('------')
     if not hasattr(bot, 'uptime'):
         bot.uptime = datetime.datetime.utcnow()
+    game = discord.Game(name='Butler Simulator Deluxe', url='http://reupload.nl', type=1)
+    await bot.change_presence(game=game, status=None, afk=False)
 
 @bot.event
 async def on_resumed():

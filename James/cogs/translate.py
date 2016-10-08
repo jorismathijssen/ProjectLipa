@@ -121,7 +121,7 @@ class Translate:
             if not phrase:
                 phrase = backup
                 break
-        await self.bot.say(author.mention + ", I have mangled the text into the following: " + phrase);
+        await self.bot.say(author.mention + " mangle: " + phrase);
 
 def setup(bot):
     bot.add_cog(Translate(bot))
