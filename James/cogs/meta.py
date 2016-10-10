@@ -8,6 +8,7 @@ from collections import Counter
 
 import discord
 from discord.ext import commands
+from discord.ext.commands.cooldowns import BucketType
 
 from .utils import checks, formats
 
@@ -47,6 +48,7 @@ class Meta:
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.cooldown(1, 30, BucketType.user)
     @commands.command(pass_context=True, hidden=True, aliases=['hi', 'Hello', 'Hi', 'Hoi', 'hoi'])
     async def hello(self, ctx):
         """Displays my intro message."""
@@ -121,7 +123,6 @@ class Meta:
         is given then it is assumed to be seconds. You can also combine
         multiple units together, e.g. 2h4m10s.
         """
-
         author = ctx.message.author
         reminder = None
         completed = None

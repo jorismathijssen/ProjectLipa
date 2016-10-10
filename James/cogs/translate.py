@@ -4,6 +4,7 @@ import random
 
 import aiohttp
 from discord.ext import commands
+from discord.ext.commands.cooldowns import BucketType
 
 mangle_lines = {}
 errorcode = 1
@@ -86,6 +87,7 @@ class Translate:
                                                                                                      resp.reason,
                                                                                                      resp.headers)
 
+    @commands.cooldown(1, 360, BucketType.user)
     @commands.command(pass_context=True, aliases=['tr'])
     async def translate(self, ctx, *, phrase=''):
         """
@@ -100,6 +102,7 @@ class Translate:
         if (errorcode == 1):
             await self.bot.say(author.mention + ", something went wrong. This is the message: " + translation);
 
+    @commands.cooldown(2, 120, BucketType.user)
     @commands.command(pass_context=True, aliases=['mngl'])
     async def mangle(self, ctx, *, phrase=''):
         """

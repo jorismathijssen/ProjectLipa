@@ -3,6 +3,7 @@ from urllib.parse import urlencode
 import aiohttp
 import xmltodict
 from discord.ext import commands
+from discord.ext.commands.cooldowns import BucketType
 
 
 class Weather:
@@ -124,6 +125,7 @@ class Weather:
 
         return description + ' ' + str(m_s) + 'm/s (' + degrees + ')'
 
+    @commands.cooldown(2, 120, BucketType.user)
     @commands.command(pass_context=True, hidden=False, aliases=['Weather', 'weer', 'Weer'])
     async def weather(self, ctx, *, location):
         """Displays my intro message."""

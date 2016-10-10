@@ -21,7 +21,8 @@ initial_extensions = [
     'cogs.api',
     'cogs.translate',
     'cogs.meta',
-    'cogs.weather'
+    'cogs.weather',
+    'cogs.playlist'
 
 ]
 
@@ -48,6 +49,11 @@ async def on_command_error(error, ctx):
         print('In {0.command.qualified_name}:'.format(ctx), file=sys.stderr)
         traceback.print_tb(error.original.__traceback__)
         print('{0.__class__.__name__}: {0}'.format(error.original), file=sys.stderr)
+    elif isinstance(error, commands.CommandOnCooldown):
+        m, s = divmod(error.retry_after, 60)
+        fmt = "Please slowdown " + ctx.message.author.mention + ", this command is on cooldown! Try again in {} minutes and {} seconds".format(
+            round(m), round(s))
+        await bot.send_message(ctx.message.channel, fmt)
 
 
 @bot.event
@@ -79,11 +85,24 @@ async def on_command(command, ctx):
 
     log.info('{0.timestamp}: {0.author.name} in {1}: {0.content}'.format(message, destination))
 
-
 @bot.event
 async def on_message(message):
+    python = bot
+
+    if python == None:
+        print('kek')
+
     if message.author.bot:
         return
+    if bot.connection.user.mentioned_in(message):
+        if message.content.startswith(('hello ', 'Hello ', 'Hoi ', 'hoi ', 'goedemorgen ',
+                                       'Goedemorgen ', 'goedeavond ', 'Goedeavond ',
+                                       'goedemiddag ', 'Goedemiddag ', 'hi ', 'Hi ')):
+            msg = 'Hello {0.author.mention}'.format(message)
+        else:
+            msg = 'Mmh? You can find the commands i work with by typing !help or .help, {0.author.mention}'.format(
+                message)
+        await bot.send_message(message.channel, msg)
 
     await bot.process_commands(message)
 
