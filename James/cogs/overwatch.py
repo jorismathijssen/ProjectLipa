@@ -20,6 +20,6 @@ def searchOverwatchWikia(searchQuery):
 def giveOverwatchWikiaURL(searchQuery):
 	try:
 		page = wikia.page("Overwatch",searchQuery)
-		return page.url
+		return page.url.replace(" ","%20")
 	except:
 		return "Sorry, die kon ik niet vinden :("
