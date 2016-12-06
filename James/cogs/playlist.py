@@ -73,6 +73,7 @@ class Music:
     def __init__(self, bot):
         self.bot = bot
         self.voice_states = {}
+        self.firstBoot = True;
 
     def get_voice_state(self, server):
         state = self.voice_states.get(server.id)
@@ -103,7 +104,6 @@ class Music:
         if summoned_channel is None:
             await self.bot.say('You are not in a voice channel.')
             return False
-
         state = self.get_voice_state(ctx.message.server)
         if state.voice is None:
             state.voice = await self.bot.join_voice_channel(summoned_channel)
@@ -212,6 +212,7 @@ class Music:
         opts = {
             'default_search': 'auto',
             'quiet': True,
+            'format': 'bestaudio',
         }
 
         if state.voice is None:
@@ -225,7 +226,8 @@ class Music:
             fmt = 'An error occurred while processing this request: ```py\n{}: {}\n```'
             await self.bot.send_message(ctx.message.channel, fmt.format(type(e).__name__, e))
         else:
-            player.volume = 0.6
+            if self.firstBoot:
+                player.volume = 0.2
             entry = VoiceEntry(ctx.message, player)
             await self.bot.say('Enqueued ' + str(entry))
             await state.songs.put(entry)

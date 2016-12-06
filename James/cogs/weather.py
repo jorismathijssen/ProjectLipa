@@ -127,7 +127,7 @@ class Weather:
 
     @commands.cooldown(2, 120, BucketType.user)
     @commands.command(pass_context=True, hidden=False, aliases=['Weather', 'weer', 'Weer'])
-    async def weather(self, ctx, *, location):
+    async def weather(self, ctx, *, location=''):
         """Displays my intro message."""
         author = ctx.message.author
         woeid = ''
