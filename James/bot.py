@@ -101,7 +101,7 @@ async def on_message(message):
     oink = re.compile('.*[Kk]nor.*')
     bye = re.compile('^([Bb]ye|[Gg]oodbye|[Gg]tg|[Ss]eeya|[Cc]ya|[Tt]tyl|[Gg]2g|[Gg]night|[Gg]oodnight|[Ll]ater|[Hh]oudoe|[Dd]oei)$')
     haha = re.compile('(haha!?|lol!?)$')
-    thanks = re.compile('(.*([Bb]edankt).*|.*([Tt]hank).*([Yy]ou)).*{0}.*$'.format(bot.user.name))
+    thanks = re.compile('(.*([Bb]edankt).*|.*([Tt]hank).*([Yy]ou)|.*([Tt]hanks).*).*{0}.*$'.format(bot.user.name))
     msg = ""
     if question.match(message.content):
         msg = ai.eightball()
@@ -112,7 +112,7 @@ async def on_message(message):
     elif haha.match(message.content):
         msg = await ai.haha()
     elif thanks.match(message.content):
-        msg = await ai.thanks()
+        msg = ai.thanks()
     elif bye.match(message.content):
         msg = "{0} {1.author.mention}".format(ai.bye(),message)
     if msg != "":
