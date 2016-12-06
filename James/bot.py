@@ -4,15 +4,17 @@ import json
 import logging
 import sys
 import traceback
+import re
 from collections import Counter
 
 import discord
 from discord.ext import commands
 
-from James.cogs.utils import checks
+from cogs.utils import checks
+from cogs import ai
 
 description = """
-Hello my name is James, how can I help you?
+Hello my name is James, how may I help you?
 """
 
 initial_extensions = [
@@ -64,8 +66,8 @@ async def on_ready():
     print('------')
     if not hasattr(bot, 'uptime'):
         bot.uptime = datetime.datetime.utcnow()
-    game = discord.Game(name='Butler Simulator Deluxe', url='http://reupload.nl', type=1)
-    await bot.change_presence(game=game, status=None, afk=False)
+    # game = discord.Game(name='Butler Simulator Deluxe', url='http://reupload.nl', type=1)
+    # await bot.change_presence(game=game, status=None, afk=False)
 
 
 @bot.event
@@ -94,14 +96,26 @@ async def on_message(message):
 
     if message.author.bot:
         return
-    if bot.connection.user.mentioned_in(message):
-        if message.content.startswith(('hello ', 'Hello ', 'Hoi ', 'hoi ', 'goedemorgen ',
-                                       'Goedemorgen ', 'goedeavond ', 'Goedeavond ',
-                                       'goedemiddag ', 'Goedemiddag ', 'hi ', 'Hi ')):
-            msg = 'Hello {0.author.mention}'.format(message)
-        else:
-            msg = 'Mmh? You can find the commands i work with by typing !help or .help, {0.author.mention}'.format(
-                message)
+    question = re.compile('.*{0}.*\?'.format(bot.user.name))
+    laugh = re.compile('\s*([Xx]+[dD]+|([Hh]+[Aa]+)+)')
+    oink = re.compile('.*[Kk]nor.*')
+    bye = re.compile('^([Bb]ye|[Gg]oodbye|[Gg]tg|[Ss]eeya|[Cc]ya|[Tt]tyl|[Gg]2g|[Gg]night|[Gg]oodnight|[Ll]ater|[Hh]oudoe|[Dd]oei)$')
+    haha = re.compile('(haha!?|lol!?)$')
+    thanks = re.compile('(.*([Bb]edankt).*|.*([Tt]hank).*([Yy]ou)).*{0}.*$'.format(bot.user.name))
+    msg = ""
+    if question.match(message.content):
+        msg = ai.eightball()
+    elif oink.match(message.content):
+        msg = "Wat ben jij een lief varkentje! 🐷"
+    elif laugh.match(message.content):
+        msg = await ai.laugh()
+    elif haha.match(message.content):
+        msg = await ai.haha()
+    elif thanks.match(message.content):
+        msg = await ai.thanks()
+    elif bye.match(message.content):
+        msg = "{0} {1.author.mention}".format(ai.bye(),message)
+    if msg != "":
         await bot.send_message(message.channel, msg)
 
     await bot.process_commands(message)
