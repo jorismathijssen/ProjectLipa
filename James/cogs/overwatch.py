@@ -11,7 +11,9 @@ import wikia
 def searchOverwatchWikia(searchQuery):
 	try:
 		summary = wikia.summary("Overwatch", searchQuery)
-		return wikia.summary("Overwatch", searchQuery)
+		if("REDIRECT" in summary):
+			summary = wikia.summary("Overwatch", summary.replace("REDIRECT",""))
+		return summary
 	except:
 		return "Sorry, die kon ik niet vinden :("
 		
