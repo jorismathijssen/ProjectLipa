@@ -2,16 +2,21 @@ import copy
 import datetime
 import json
 import logging
+import re
 import sys
 import traceback
-import re
 from collections import Counter
+from sys import platform
 
-import discord
 from discord.ext import commands
 
-from cogs.utils import checks
-from cogs import ai
+if platform == "win32":
+    from James.cogs.utils import checks
+    from James.cogs import ai
+
+elif platform == "linux" or platform == "linux2":
+    from cogs.utils import checks
+    from cogs import ai
 
 description = """
 Hello my name is James, how may I help you?
