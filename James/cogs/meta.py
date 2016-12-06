@@ -76,11 +76,11 @@ class Meta:
         await self.bot.say('\n'.join(map(to_string, characters)))
 
     @commands.command()
-    async def overwatch(self, message: str):
+    async def overwatch(self,*, message: str):
         await self.bot.say(overwatch.searchOverwatchWikia(message))
 
     @commands.command()
-    async def overwatchwiki(self, message: str):
+    async def overwatchwiki(self,*, message: str):
         await self.bot.say(overwatch.giveOverwatchWikiaURL(message))
 
 
