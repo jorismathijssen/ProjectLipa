@@ -1,3 +1,8 @@
+"""
+updater.py - Ask the overwatch wikia a question
+Copyright 2016, Guus Beckett reupload.nl
+Licensed under the GPL 2.
+"""
 import subprocess
 import sys
 import os
