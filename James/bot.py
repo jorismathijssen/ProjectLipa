@@ -111,7 +111,7 @@ async def on_message(message):
     if question.match(message.content):
         msg = ai.eightball()
     elif oink.match(message.content):
-        msg = "Wat ben jij een lief varken! 🐷"
+        msg = "Wat ben jij een lief varkentje! 🐷"
     elif laugh.match(message.content):
         msg = await ai.laugh()
     elif haha.match(message.content):
