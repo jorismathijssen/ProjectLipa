@@ -60,7 +60,7 @@ async def on_command_error(error, ctx):
         m, s = divmod(error.retry_after, 60)
         fmt = "Please slowdown " + ctx.message.author.mention + ", this command is on cooldown! Try again in {} minutes and {} seconds".format(
             round(m), round(s))
-        await bot.send_message(ctx.message.channel, fmt)
+        await bot.send_message(ctx.message.author, fmt)
 
 
 @bot.event

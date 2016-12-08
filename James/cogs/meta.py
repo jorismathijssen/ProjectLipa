@@ -1,6 +1,7 @@
 import asyncio
 import copy
 import datetime
+import json
 import os
 import re
 import unicodedata
@@ -10,8 +11,9 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from .utils import checks, formats
 from . import overwatch
+from .utils import checks, formats
+
 
 class TimeParser:
     def __init__(self, argument):
@@ -322,7 +324,7 @@ class Meta:
         """Tells you information about the bot itself."""
         revision = os.popen(r'git show -s HEAD --format="%s (%cr)"').read().strip()
         result = ['**About Me:**']
-        result.append('- Author: Joris Mathijssen')
+        result.append('- Author: Joris Mathijssen & Guus Beckett')
         result.append('- Library: discord.py (Python)')
         result.append('- Latest Change: {}'.format(revision))
         result.append('- Uptime: {}'.format(self.get_bot_uptime()))
@@ -350,9 +352,9 @@ class Meta:
     @commands.command(hidden=True)
     @checks.is_owner()
     async def commandstats(self):
-        msg = 'Since startup, {} commands have been used.\n{}'
+        msg = 'Since startup, {} commands have been used: \n{}'
         counter = self.bot.commands_used
-        await self.bot.say(msg.format(sum(counter.values()), counter))
+        await self.bot.say(msg.format(sum(counter.values()), json.dumps(counter, indent=1)))
 
     @commands.command(hidden=True)
     async def cud(self):
