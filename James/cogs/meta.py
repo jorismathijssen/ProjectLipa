@@ -86,6 +86,7 @@ class Meta:
         await self.bot.say(overwatch.giveOverwatchWikiaURL(message))
 
     @commands.command()
+    @checks.admin_or_permissions(manage_server=True)
     async def updateFromGit(self):
         await self.bot.say("brb!")
         updater.update()
