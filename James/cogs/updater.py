@@ -1,5 +1,5 @@
 """
-updater.py - Ask the overwatch wikia a question
+updater.py - update and restart James
 Copyright 2016, Guus Beckett reupload.nl
 Licensed under the GPL 2.
 """
