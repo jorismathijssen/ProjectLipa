@@ -11,7 +11,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from . import overwatch
+from . import overwatch, updater
 from .utils import checks, formats
 
 
@@ -84,6 +84,11 @@ class Meta:
     @commands.command()
     async def overwatchwiki(self,*, message: str):
         await self.bot.say(overwatch.giveOverwatchWikiaURL(message))
+
+    @commands.command()
+    async def updateFromGit(self):
+        await self.bot.say("brb!")
+        updater.update()
 
 
     @commands.command()
