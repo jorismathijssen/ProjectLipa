@@ -11,7 +11,6 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from . import updater
 from .utils import checks, formats
 
 
@@ -76,12 +75,6 @@ class Meta:
                                                                                                               name, c)
 
         await self.bot.say('\n'.join(map(to_string, characters)))
-
-    @commands.command()
-    @checks.admin_or_permissions(manage_server=True)
-    async def updateFromGit(self):
-        await self.bot.say("brb!")
-        updater.update()
 
 
     @commands.command()

@@ -30,8 +30,8 @@ initial_extensions = [
     'cogs.meta',
     'cogs.weather',
     'cogs.playlist',
-    'cogs.overwatch'
-
+    'cogs.overwatch',
+    'cogs.updater'
 ]
 
 discord_logger = logging.getLogger('discord')
