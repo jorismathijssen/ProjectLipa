@@ -11,7 +11,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-import updater
+from . import updater
 from .utils import checks, formats
 
 
