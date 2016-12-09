@@ -41,7 +41,7 @@ class Overwatch:
     async def searchOverwatchWikia(self, searchQuery):
         try:
             response = wikia.summary("Overwatch", searchQuery)
-            if ("REDIRECT" in response):
+            if ("REDIRECT" in response.upper()):
                 response = wikia.summary("Overwatch", response.replace("REDIRECT", ""))
         except:
             response = "Sorry, die kon ik niet vinden :("
