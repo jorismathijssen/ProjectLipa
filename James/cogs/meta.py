@@ -11,7 +11,6 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
-from . import overwatch
 from .utils import checks, formats
 
 
@@ -76,14 +75,6 @@ class Meta:
                                                                                                               name, c)
 
         await self.bot.say('\n'.join(map(to_string, characters)))
-
-    @commands.command()
-    async def overwatch(self,*, message: str):
-        await self.bot.say(overwatch.searchOverwatchWikia(message))
-
-    @commands.command()
-    async def overwatchwiki(self,*, message: str):
-        await self.bot.say(overwatch.giveOverwatchWikiaURL(message))
 
 
     @commands.command()

@@ -29,7 +29,8 @@ initial_extensions = [
     'cogs.translate',
     'cogs.meta',
     'cogs.weather',
-    'cogs.playlist'
+    'cogs.playlist',
+    'cogs.overwatch'
 
 ]
 
