@@ -103,7 +103,7 @@ async def on_message(message):
     if message.author.bot:
         return
     question = re.compile('.*{0}.*\?'.format(bot.user.name))
-    laugh = re.compile('\s*([Xx]+[dD]+|([Hh]+[Aa]+(\s+|$))+)')
+    laugh = re.compile('\s*([Xx]+[dD]+|([Hh]+[Aa]+(\w+|$))+)')
     oink = re.compile('.*[Kk]nor.*')
     bye = re.compile('^([Bb]ye|[Gg]oodbye|[Gg]tg|[Ss]eeya|[Cc]ya|[Tt]tyl|[Gg]2g|[Gg]night|[Gg]oodnight|[Ll]ater|[Hh]oudoe|[Dd]oei)$')
     haha = re.compile('(haha!?|lol!?)$')
