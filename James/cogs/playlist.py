@@ -76,7 +76,6 @@ class Music:
         self.bot = bot
         self.voice_states = {}
         self.firstBoot = True;
-        self.volumeAmount = 0.2
 
     def get_voice_state(self, server):
         state = self.voice_states.get(server.id)
@@ -264,11 +263,7 @@ class Music:
             await self.bot.send_message(ctx.message.channel, fmt.format(type(e).__name__, e))
         else:
             if self.firstBoot:
-                self.volumeAmount = 0.2
-                player.volume = self.volumeAmount
-                self.firstBoot = False
-            else:
-                player.volume = self.volumeAmount
+                player.volume = 0.2
             entry = VoiceEntry(ctx.message, player)
             await self.bot.say('Enqueued ' + str(entry))
             await state.songs.put(entry)
@@ -280,8 +275,7 @@ class Music:
         state = self.get_voice_state(ctx.message.server)
         if state.is_playing():
             player = state.player
-            self.volumeAmount = value / 100
-            player.volume = self.volumeAmount
+            player.volume = value / 100
             await self.bot.say('Set the volume to {:.0%}'.format(player.volume))
 
     @commands.command(pass_context=True, no_pm=True)
@@ -356,8 +350,7 @@ class Music:
             await self.bot.say('Not playing anything.')
         else:
             skip_count = len(state.skip_votes)
-            await self.bot.say('Now playing {} [skips: {}/3] with volume at {:.0%}'.format(state.current, skip_count,
-                                                                                           self.volumeAmount))
+            await self.bot.say('Now playing {} [skips: {}/3]'.format(state.current, skip_count))
 
 
 def setup(bot):
