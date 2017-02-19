@@ -1,6 +1,7 @@
 import asyncio
 
 import discord
+import spotipy
 from discord.ext import commands
 
 if not discord.opus.is_loaded():
@@ -11,6 +12,7 @@ if not discord.opus.is_loaded():
     # note that on windows this DLL is automatically provided for you
     discord.opus.load_opus('opus')
 
+sp = spotipy.Spotify()
 
 class VoiceEntry:
     def __init__(self, message, player):
@@ -196,6 +198,40 @@ class Music:
             entry = VoiceEntry(ctx.message, player)
             await self.bot.say('HELL IS LOADING ' + '\N{SMILING FACE WITH HORNS}')
             await self.bot.send_file(ctx.message.channel, 'img/DemonTroll/img.jpg')
+            await state.songs.put(entry)
+
+    @commands.command(pass_context=True, no_pm=True)
+    async def spotsearch(self, ctx, *, urn: str):
+        track = sp.track(urn)
+        await self.bot.say(track['album']['images'][0]['url'])
+        await self.bot.say("```" + track['artists'][0]['name'] + " - " + track['name'] + "```")
+        state = self.get_voice_state(ctx.message.server)
+        opts = {
+            'default_search': 'auto',
+            'quiet': True,
+            'format': 'bestaudio',
+        }
+
+        if state.voice is None:
+            success = await ctx.invoke(self.summon)
+            if not success:
+                return
+
+        try:
+            player = await state.voice.create_ytdl_player(track['artists'][0]['name'] + " - " + track['name'],
+                                                          ytdl_options=opts, after=state.toggle_next)
+        except Exception as e:
+            fmt = 'An error occurred while processing this request: ```py\n{}: {}\n```'
+            await self.bot.send_message(ctx.message.channel, fmt.format(type(e).__name__, e))
+        else:
+            if self.firstBoot:
+                self.volumeAmount = 0.2
+                player.volume = self.volumeAmount
+                self.firstBoot = False
+            else:
+                player.volume = self.volumeAmount
+            entry = VoiceEntry(ctx.message, player)
+            await self.bot.say('Enqueued ' + str(entry))
             await state.songs.put(entry)
 
     @commands.command(pass_context=True, no_pm=True)
