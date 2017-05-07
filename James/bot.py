@@ -103,6 +103,7 @@ async def on_message(message):
     if message.author.bot:
         return
     question = re.compile('.*{0}.*\?'.format(bot.user.name))
+    fuckyou = re.compile('[Ff]uck.*{0}.*'.format(bot.user.name))
     laugh = re.compile('\s*([Xx]+[dD]+|([Hh]+[Aa]+(\s+|$))+)')
     oink = re.compile('.*[Kk]nor.*')
     bye = re.compile('^([Bb]ye|[Gg]oodbye|[Gg]tg|[Ss]eeya|[Cc]ya|[Tt]tyl|[Gg]2g|[Gg]night|[Gg]oodnight|[Ll]ater|[Hh]oudoe|[Dd]oei)$')
@@ -111,6 +112,8 @@ async def on_message(message):
     msg = ""
     if question.match(message.content):
         msg = ai.eightball()
+    elif fuckyou.match(message.content):
+        msg = ai.fuckyou()
     elif oink.match(message.content):
         msg = "Wat ben jij een lief varkentje! 🐷"
     elif laugh.match(message.content):
