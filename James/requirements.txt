@@ -4,3 +4,4 @@ requests
 xmltodict
 discord.py
 wikia
+spotipy
